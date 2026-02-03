@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIGC Page</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            font-family: "Courier New", monospace;
+        }
+
+        /* 超现实背景（保留你的原图链接） */
+        .aigc-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: url(https://raw.githubusercontent.com/lyc2913/LiliWeb/refs/heads/main/Projects_PG.png) no-repeat center center;
+            background-size: cover;
+            filter: blur(1px) brightness(0.9);
+        }
+
+        /* 核心：封面容器（解决尺寸问题+复古包装） */
+        .youtube-cover-container {
+            position: relative;
+            z-index: 2;
+            width: 80%; /* 容器宽度，可调整（如70%/90%） */
+            max-width: 1200px; /* 最大宽度，避免大屏变形 */
+            aspect-ratio: 16/9; /* 强制16:9比例，适配现代视频 */
+            border: 12px solid #e0d9ce; /* 复古奶油白边框，和相框/电脑风格统一 */
+            border-radius: 10px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4); /* 厚重阴影，增强复古质感 */
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* 高清封面图（解决画质+尺寸奇怪） */
+        .youtube-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 按容器比例裁剪，不拉伸 */
+            filter: brightness(0.95) contrast(1.05); /* 优化画质，更贴合背景 */
+            transition: all 0.3s ease;
+        }
+
+        /* 悬停效果：轻微放大+画质提亮，有交互感 */
+        .youtube-cover-container:hover {
+            transform: scale(1.02); /* 轻微放大，不突兀 */
+            box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+        }
+        .youtube-cover-container:hover .youtube-cover {
+            filter: brightness(1.05) contrast(1.1);
+        }
+
+        /* 复古播放按钮（居中显示，增强辨识度） */
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(255, 200, 100, 0.8); /* 复古暖光发光 */
+            transition: all 0.3s ease;
+            z-index: 3;
+        }
+        .play-button::after {
+            content: "▶";
+            color: #8b5a2b; /* 复古棕，贴合边框颜色 */
+            font-size: 36px;
+            margin-left: 5px; /* 播放箭头居中微调 */
+        }
+        .youtube-cover-container:hover .play-button {
+            width: 90px;
+            height: 90px;
+            box-shadow: 0 0 25px rgba(255, 200, 100, 1);
+        }
+
+        /* 视频标题（可选，复古字体，增强氛围感） */
+        .video-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7)); /* 渐变遮罩，不遮挡封面 */
+            color: #fff;
+            font-size: 22px;
+            letter-spacing: 1px;
+            z-index: 3;
+        }
+
+        /* 返回链接（复古样式，贴合整体） */
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            font-size: 22px;
+            text-decoration: none;
+            z-index: 3;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            color: #f5d7b0; /* 复古米白，悬停变色 */
+            transform: translateX(-3px);
+        }
+        .back-projects {
+            left: auto;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="aigc-bg"></div>
+
+    <!-- 返回链接 -->
+    <a href="index.html" target="_self" class="back-link">← Back to Home</a>
+    <a href="Projects_PG.html" target="_self" class="back-link back-projects">← Back to Projects</a>
+
+    <!-- 核心：YouTube封面跳转容器（替换为你的视频ID） -->
+    <a href="https://www.youtube.com/watch?v=UFCHzFhtuOU" target="_blank" class="youtube-cover-container">
+        <!-- 兼容链接：优先显示手动自定义封面，16:9比例，画质清晰 -->
+<img src="https://img.youtube.com/vi/UFCHzFhtuOU/sddefault.jpg" alt="AIGC Demo Video" class="youtube-cover">
+        <!-- 复古播放按钮 -->
+        <div class="play-button"></div>
+        <!-- 可选：视频标题（可删除） -->
+        <div class="video-title">AI2041</div>
+    </a>
+</body>
+</html>
