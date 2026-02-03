@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Retro PC Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Courier New", monospace;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* 你的专属背景图（全屏铺满，无额外修饰） */
+        .surreal-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: url(https://github.com/lyc2913/LiliWeb/blob/main/Home_BG.png?raw=true) no-repeat center center;
+            background-size: cover;
+        }
+
+        /* 文字容器：整体右移、适配背景显示器（核心调整：right替代left+平移） */
+        .monitor-text-container {
+            position: relative;
+            z-index: 2;
+            top: -5px;
+            /* 整体右移：先左偏移减少，再加translateX右移，精准贴合 */
+            left: 15px; 
+            transform: scale(0.98) translateX(12px);
+            width: 220px;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* 竖排导航容器：缩小行间距（字间距）、紧凑排列 */
+        .nav-links {
+            position: relative;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* 大幅缩小行间距，贴合紧凑需求 */
+            padding: 15px;
+        }
+
+        /* 核心文字：仅粉紫+青蓝霓虹发光，无额外故障层 */
+        .nav-links a {
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 0; /* 字间距归零，完全紧凑 */
+            /* 仅保留文字原生霓虹发光，和背景显示器融合 */
+            text-shadow: 
+                0 0 4px #fff,
+                0 0 8px #fff,
+                0 0 15px rgba(255, 0, 200, 0.9),
+                0 0 30px rgba(255, 0, 200, 1),
+                0 0 60px rgba(0, 200, 255, 0.9),
+                0 0 120px rgba(0, 200, 255, 1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* 保留悬停交互：轻微右移+放大，霓虹色渐变（黄橙+粉紫） */
+        .nav-links a:hover {
+            transform: translateX(6px) scale(1.08); /* 悬停右移幅度微调，更自然 */
+            text-shadow: 
+                0 0 4px #fff,
+                0 0 8px #fff,
+                0 0 15px rgba(255, 200, 0, 0.9),
+                0 0 30px rgba(255, 200, 0, 1),
+                0 0 60px rgba(255, 0, 200, 0.9),
+                0 0 120px rgba(255, 0, 200, 1);
+        }
+
+        /* 响应式适配：手机/平板自动缩放，保持右移和紧凑间距 */
+        @media (max-width: 768px) {
+            .monitor-text-container {
+                width: 180px;
+                height: 230px;
+                transform: scale(0.95) translateX(10px);
+                left: 12px;
+            }
+            .nav-links a {
+                font-size: 22px;
+            }
+            .nav-links {
+                gap: 10px;
+            }
+        }
+        @media (max-width: 480px) {
+            .monitor-text-container {
+                width: 140px;
+                height: 180px;
+                transform: scale(0.9) translateX(8px);
+                left: 10px;
+            }
+            .nav-links a {
+                font-size: 18px;
+            }
+            .nav-links {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 超现实背景图（含自带显示器） -->
+    <div class="surreal-bg"></div>
+
+    <!-- 文字容器：仅保留导航链接，无多余故障/扫描线层 -->
+    <div class="monitor-text-container">
+        <div class="nav-links">
+            <a href="index.html" target="_self">Home</a>
+            <a href="projects.html" target="_self">Projects</a>
+            <a href="about.html" target="_self">About</a>
+            <a href="connect.html" target="_self">Connect</a>
+        </div>
+    </div>
+
+    <!-- 仅保留轻微随机位移，贴合显示器质感（可删，保留更自然） -->
+    <script>
+        const monitorContainer = document.querySelector('.monitor-text-container');
+        setInterval(() => {
+            const randomX = Math.random() * 1 - 0.5;
+            const randomY = Math.random() * 1 - 0.5;
+            monitorContainer.style.transform = `scale(0.98) translateX(12px) translate(${randomX}px, ${randomY}px)`;
+            setTimeout(() => {
+                monitorContainer.style.transform = 'scale(0.98) translateX(12px) translate(0,0)';
+            }, 40);
+        }, 3000);
+    </script>
+</body>
+</html>
