@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>brand 主题页面</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 页面主体样式 */
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: "Times New Roman", serif;
+            padding: 20px;
+        }
+
+        /* 顶部AIGC标题样式 */
+        .page-title {
+            text-align: right;
+            font-size: 48px;
+            font-weight: normal;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        /* 返回按钮样式 */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-btn::after {
+            content: "<";
+            color: #000;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* 内容卡片容器 */
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 单个卡片样式 
+        .content-card {
+            display: flex;
+            align-items: center;
+            background-color: #e0e0e0;
+            color: #000;
+            padding: 20px;
+            width: 100%;
+        }*/
+       
+        .content-card {
+            display: flex;
+            align-items: flex-start;  /* 改为 flex-start 防止高度被撑开 */
+            background-color: #e0e0e0;  /* 确保背景色存在 */
+            color: #000;                /* 确保文字为黑色 */
+            padding: 20px;
+            width: 100%;
+            min-height: 200px;          /* 加最小高度防止被压缩 */
+}
+        /* 卡片媒体区域（图片/视频通用） 
+        .card-media {
+            display: flex;
+            gap: 15px;
+            margin-right: auto;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }*/
+
+        .card-media {
+            display: flex;
+            flex-direction: row;        /* 横向排列 */
+            flex-wrap: wrap;            /* 换行 */
+            align-content: flex-start;  /* 多行时顶部对齐 */
+            gap: 15px;
+            margin-right: auto;
+            align-items: flex-start;
+            max-width: calc(100% - 200px);  /* 限制宽度，给文字留空间 */
+}
+        /* 图片样式 - 保持原始尺寸 */
+        .card-media img {
+            height: 150px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .card-media img:hover {
+            opacity: 0.8;
+        }
+
+        /* 视频封面容器 */
+        .video-thumbnail {
+            position: relative;
+            width: 267px;
+            height: 150px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 播放按钮 */
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 0, 0, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-button::after {
+            content: "";
+            width: 0;
+            height: 0;
+            border-left: 20px solid #fff;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 5px;
+        }
+
+        /* Lightbox 遮罩层 */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            cursor: default;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 40px;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* 视频播放容器 */
+        .video-player {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-player.active {
+            display: flex;
+        }
+
+        .video-player iframe {
+            width: 80%;
+            height: 80%;
+            max-width: 960px;
+            max-height: 540px;
+        }
+
+        .video-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 40px;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* 卡片文字区域 */
+        .card-text {
+            text-align: right;
+            margin-left: 20px;
+            flex-shrink: 0;
+            width: 180px;           /* 固定宽度防止被压缩 */
+        }
+
+        .card-text h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            font-weight: normal;
+        }
+
+        .card-text p {
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <a href="projects.html" class="back-btn" title="返回项目页面"></a>
+
+    <!-- 页面标题 -->
+    <h1 class="page-title">AIGC</h1>
+
+    <!-- ==================== 内容卡片容器 ==================== -->
+    <div class="content-container">
+        
+        <!-- ========== 卡片 1：uniway（单张图片） ========== -->
+        <div class="content-card">
+            <div class="card-media">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/brandWorks/uniway.png" alt="uniway" onclick="openLightbox(this.src)">
+            </div>
+            <div class="card-text">
+                <h3>Uniway</h3>
+                <p>Provide a one-stop life guide and community communication platform to help users quickly adapt to new environments, discover new things, and share experiences with other users.</p>
+            </div>
+        </div>
+
+        <!-- ========== 卡片 2：pangu（单张图片） ========== -->
+        <div class="content-card">
+            <div class="card-media">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/brandWorks/pangu.png" alt="pangu" onclick="openLightbox(this.src)">
+            </div>
+            <div class="card-text">
+                <h3>Pangu</h3>
+                <p>Guide elderly, new immigrants, international students, and others on how to use smartphones，help them better understand and use technology in their daily lives, improving their convenience and ease of use.</p>
+            </div>
+        </div>
+
+        <!-- ==================== 在这里添加新卡片 ==================== -->
+
+        <!-- ========== 卡片 4：新图片项目（复制此模板） ========== -->
+        <!--
+        <div class="content-card">
+            <div class="card-media">
+                <img src="图片URL" alt="描述" onclick="openLightbox(this.src)">
+                <img src="图片URL" alt="描述" onclick="openLightbox(this.src)">
+                ← 需要更多图片就复制这行
+            </div>
+            <div class="card-text">
+                <h3>项目标题</h3>
+                <p>项目描述</p>
+            </div>
+        </div>
+        -->
+
+        <!-- ========== 卡片 5：新视频项目（复制此模板） ========== -->
+        <!--
+        <div class="content-card">
+            <div class="card-media">
+                <div class="video-thumbnail" onclick="openVideo('视频ID')">
+                    <img src="https://img.youtube.com/vi/视频ID/maxresdefault.jpg" alt="视频封面">
+                    <div class="play-button"></div>
+                </div>
+            </div>
+            <div class="card-text">
+                <h3>视频标题</h3>
+                <p>视频描述</p>
+            </div>
+        </div>
+        -->
+
+        <!-- ==================== 新卡片添加结束 ==================== -->
+
+    </div>
+
+    <!-- 图片 Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="放大图片" id="lightbox-img" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- 视频播放器 -->
+    <div class="video-player" id="videoPlayer">
+        <span class="video-close" onclick="closeVideo()">&times;</span>
+        <iframe id="youtubeIframe" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        // 打开图片 Lightbox
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭 Lightbox
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 打开视频（传入视频ID）
+        function openVideo(videoId) {
+            document.getElementById('youtubeIframe').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+            document.getElementById('videoPlayer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭视频
+        function closeVideo() {
+            document.getElementById('videoPlayer').classList.remove('active');
+            document.getElementById('youtubeIframe').src = '';
+            document.body.style.overflow = 'auto';
+        }
+
+        // ESC 键关闭
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeVideo();
+            }
+        });
+    </script>
+</body>
+</html>
