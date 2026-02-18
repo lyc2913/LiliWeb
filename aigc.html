@@ -1,148 +1,488 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIGC Page</title>
+    <title>AIGC 主题页面</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 页面主体样式 */
         body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            font-family: "Courier New", monospace;
+            background-color: #000;
+            color: #fff;
+            font-family: "Times New Roman", serif;
+            padding: 20px;
         }
 
-        /* 超现实背景（保留你的原图链接） */
-        .aigc-bg {
+        /* 顶部AIGC标题样式 */
+        .page-title {
+            text-align: right;
+            font-size: 48px;
+            font-weight: normal;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        /* 返回按钮样式 */
+        .back-btn {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            background: url(https://raw.githubusercontent.com/lyc2913/LiliWeb/refs/heads/main/Projects_PG.png) no-repeat center center;
-            background-size: cover;
-            filter: blur(1px) brightness(0.9);
-        }
-
-        /* 核心：封面容器（解决尺寸问题+复古包装） */
-        .youtube-cover-container {
-            position: relative;
-            z-index: 2;
-            width: 80%; /* 容器宽度，可调整（如70%/90%） */
-            max-width: 1200px; /* 最大宽度，避免大屏变形 */
-            aspect-ratio: 16/9; /* 强制16:9比例，适配现代视频 */
-            border: 12px solid #e0d9ce; /* 复古奶油白边框，和相框/电脑风格统一 */
-            border-radius: 10px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4); /* 厚重阴影，增强复古质感 */
-            overflow: hidden;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            text-decoration: none;
         }
 
-        /* 高清封面图（解决画质+尺寸奇怪） */
-        .youtube-cover {
+        .back-btn::after {
+            content: "<";
+            color: #000;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* 内容卡片容器 */
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 单个卡片样式 
+        .content-card {
+            display: flex;
+            align-items: center;
+            background-color: #e0e0e0;
+            color: #000;
+            padding: 20px;
+            width: 100%;
+        }*/
+       
+        .content-card {
+            display: flex;
+            align-items: flex-start;  /* 改为 flex-start 防止高度被撑开 */
+            background-color: #e0e0e0;  /* 确保背景色存在 */
+            color: #000;                /* 确保文字为黑色 */
+            padding: 20px;
+            width: 100%;
+            min-height: 200px;          /* 加最小高度防止被压缩 */
+}
+        /* 卡片媒体区域（图片/视频通用） 
+        .card-media {
+            display: flex;
+            gap: 15px;
+            margin-right: auto;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }*/
+
+        .card-media {
+            display: flex;
+            flex-direction: row;        /* 横向排列 */
+            flex-wrap: wrap;            /* 换行 */
+            align-content: flex-start;  /* 多行时顶部对齐 */
+            gap: 15px;
+            margin-right: auto;
+            align-items: flex-start;
+            max-width: calc(100% - 200px);  /* 限制宽度，给文字留空间 */
+}
+        /* 图片样式 - 保持原始尺寸 */
+        .card-media img {
+            height: 150px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .card-media img:hover {
+            opacity: 0.8;
+        }
+
+        /* 视频封面容器 */
+        .video-thumbnail {
+            position: relative;
+            width: 267px;
+            height: 150px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 按容器比例裁剪，不拉伸 */
-            filter: brightness(0.95) contrast(1.05); /* 优化画质，更贴合背景 */
-            transition: all 0.3s ease;
+            object-fit: cover;
         }
 
-        /* 悬停效果：轻微放大+画质提亮，有交互感 */
-        .youtube-cover-container:hover {
-            transform: scale(1.02); /* 轻微放大，不突兀 */
-            box-shadow: 0 20px 45px rgba(0,0,0,0.5);
-        }
-        .youtube-cover-container:hover .youtube-cover {
-            filter: brightness(1.05) contrast(1.1);
-        }
-
-        /* 复古播放按钮（居中显示，增强辨识度） */
+        /* 播放按钮 */
         .play-button {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 0, 0, 0.9);
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
             display: flex;
-            justify-content: center;
             align-items: center;
-            box-shadow: 0 0 20px rgba(255, 200, 100, 0.8); /* 复古暖光发光 */
-            transition: all 0.3s ease;
-            z-index: 3;
-        }
-        .play-button::after {
-            content: "▶";
-            color: #8b5a2b; /* 复古棕，贴合边框颜色 */
-            font-size: 36px;
-            margin-left: 5px; /* 播放箭头居中微调 */
-        }
-        .youtube-cover-container:hover .play-button {
-            width: 90px;
-            height: 90px;
-            box-shadow: 0 0 25px rgba(255, 200, 100, 1);
+            justify-content: center;
+            transition: transform 0.2s;
         }
 
-        /* 视频标题（可选，复古字体，增强氛围感） */
-        .video-title {
-            position: absolute;
-            bottom: 0;
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-button::after {
+            content: "";
+            width: 0;
+            height: 0;
+            border-left: 20px solid #fff;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 5px;
+        }
+
+        /* Lightbox 遮罩层 */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
             left: 0;
             width: 100%;
-            padding: 15px 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7)); /* 渐变遮罩，不遮挡封面 */
-            color: #fff;
-            font-size: 22px;
-            letter-spacing: 1px;
-            z-index: 3;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
         }
 
-        /* 返回链接（复古样式，贴合整体） */
-        .back-link {
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            cursor: default;
+        }
+
+        .lightbox-close {
             position: absolute;
             top: 20px;
-            left: 20px;
+            right: 40px;
+            font-size: 40px;
             color: #fff;
-            font-size: 22px;
-            text-decoration: none;
-            z-index: 3;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
+            cursor: pointer;
+            line-height: 1;
         }
-        .back-link:hover {
-            color: #f5d7b0; /* 复古米白，悬停变色 */
-            transform: translateX(-3px);
+
+        /* 视频播放容器 */
+        .video-player {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
-        .back-projects {
-            left: auto;
-            right: 20px;
+
+        .video-player.active {
+            display: flex;
+        }
+
+        .video-player iframe {
+            width: 80%;
+            height: 80%;
+            max-width: 960px;
+            max-height: 540px;
+        }
+
+        .video-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 40px;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* 卡片文字区域 */
+        .card-text {
+            text-align: right;
+            margin-left: 20px;
+            flex-shrink: 0;
+            width: 180px;           /* 固定宽度防止被压缩 */
+        }
+
+        .card-text h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            font-weight: normal;
+        }
+
+        .card-text p {
+            font-size: 14px;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <div class="aigc-bg"></div>
+    <!-- 返回按钮 -->
+    <a href="https://github.com/lyc2913/LiliWeb/blob/main/projects.html" class="back-btn" title="返回项目页面"></a>
 
-    <!-- 返回链接 -->
-    <a href="index.html" target="_self" class="back-link">← Back to Home</a>
-    <a href="Projects_PG.html" target="_self" class="back-link back-projects">← Back to Projects</a>
+    <!-- 页面标题 -->
+    <h1 class="page-title">AIGC</h1>
 
-    <!-- 核心：YouTube封面跳转容器（替换为你的视频ID） -->
-    <a href="https://www.youtube.com/watch?v=UFCHzFhtuOU" target="_blank" class="youtube-cover-container">
-        <!-- 兼容链接：优先显示手动自定义封面，16:9比例，画质清晰 -->
-<img src="https://img.youtube.com/vi/UFCHzFhtuOU/sddefault.jpg" alt="AIGC Demo Video" class="youtube-cover">
-        <!-- 复古播放按钮 -->
-        <div class="play-button"></div>
-        <!-- 可选：视频标题（可删除） -->
-        <div class="video-title">AI2041</div>
-    </a>
+    <!-- ==================== 内容卡片容器 ==================== -->
+    <div class="content-container">
+        
+        <!-- ========== 卡片 1：中式恐怖（单张图片） ========== -->
+        <div class="content-card">
+            <div class="card-media">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/chineseHorror.png" alt="中式恐怖相关图片" onclick="openLightbox(this.src)">
+            </div>
+            <div class="card-text">
+                <h3>Chinese Horror</h3>
+                <p>凡人畏礼教，终负前盟；妖狐痴情重，反落得魂断成殇。</p>
+            </div>
+        </div>
+
+        <!-- ========== 卡片 2：Halloween Story（多张图片） ========== -->
+        <div class="content-card">
+            <div class="card-media">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/halloween_01.png" alt="万圣节故事图片1" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/halloween-02.png" alt="万圣节故事图片2" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/halloween-03.png" alt="万圣节故事图片3" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/halloween-04.png" alt="万圣节故事图片4" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/halloween-05.png" alt="万圣节故事图片5" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/halloween-06.png" alt="万圣节故事图片6" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/halloween-07.png" alt="万圣节故事图片7" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/halloween-08.png" alt="万圣节故事图片8" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/halloween-09.png" alt="万圣节故事图片9" onclick="openLightbox(this.src)">
+            </div>
+            <div class="card-text">
+                <h3>Halloween Story</h3>
+                <p>他必须下到自己灵魂的坟墓里，看一眼被自己遗弃的那部分。</p>
+            </div>
+        </div>
+
+        <!-- ========== 卡片 3：Halloween Spider（YouTube视频） ========== -->
+        <div class="content-card">
+            <div class="card-media">
+                <div class="video-thumbnail" onclick="openVideo('QRY6kHPqKxw')">
+                    <img src="https://img.youtube.com/vi/QRY6kHPqKxw/maxresdefault.jpg" alt="Halloween Spider 视频封面">
+                    <div class="play-button"></div>
+                </div>
+            </div>
+            <div class="card-text">
+                <h3>Halloween Spider</h3>
+                <p>Cheers！</p>
+            </div>
+        </div>
+
+        <!-- ========== 卡片 4：啤酒瓶 ========== -->
+        <div class="content-card">
+            <div class="card-media">
+               <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/coral.png" alt="珊瑚瓶" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/oilpainting.png" alt="油画瓶" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/growth.png" alt="种子瓶" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/wedding.png" alt="婚庆瓶" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/bamboo.png" alt="竹节瓶" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/perfume.PNG" alt="香囊瓶" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/xiaochou.PNG" alt="小丑瓶" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/bone.PNG" alt="鬼爪瓶" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/pksuo.PNG" alt="毕加索瓶" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/artmuseum.jpg" alt="油画瓶场景" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/growth2.png" alt="种子瓶场景" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/wedding2.png" alt="婚庆瓶场景" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/bamboo2.png" alt="竹节瓶场景" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/perfume2.PNG" alt="香囊瓶场景" onclick="openLightbox(this.src)">
+            </div>
+            <div class="card-text">
+                <h3>Beer Bottle Redesign</h3>
+                <p>Through different visual narratives and stylistic languages, the beer bottle is transformed from a simple consumption container into a visual object that can carry playfulness, sustainability values, or cultural symbolism. This project is a research practice on how visual narratives change the meaning of objects.</p>
+            </div>
+        </div>
+
+        <!-- ========== 卡片 5：品牌联名 ========== -->
+         <div class="content-card">
+            <div class="card-media">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/brandCo-01.png" alt="Brand Cooperation图片1海盗" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/brandCo-02.png" alt="Brand Cooperation图片2可乐" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/brandCo-05.png" alt="Brand Cooperation图片5圣诞老人" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/brandCo-03.png" alt="Brand Cooperation图片3披头士" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/brandCo-04.png" alt="Brand Cooperation图片4热红酒" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/brandCo-06.png" alt="Brand Cooperation图片6画" onclick="openLightbox(this.src)">
+            </div>
+            <div class="card-text">
+                <h3>Brand Cooperation</h3>
+                <p> </p>
+            </div>
+        </div>
+
+        <!-- ========== 卡片 6：AI Companion（YouTube视频） ========== -->
+        <div class="content-card">
+            <div class="card-media">
+                <div class="video-thumbnail" onclick="openVideo('UFCHzFhtuOU')">
+                    <img src="https://img.youtube.com/vi/UFCHzFhtuOU/maxresdefault.jpg" alt="AI Companion 视频封面">
+                    <div class="play-button"></div>
+                </div>
+            </div>
+            <div class="card-text">
+                <h3>AI Companion</h3>
+                <p>This video documents my imagination and expectations for the ideal AI companion at different stages and in different scenarios of my life, serving as a concept trailer for my master's thesis.</p>
+            </div>
+        </div>
+
+        <!-- ========== 卡片 7：slow down（YouTube视频） ========== -->
+        <div class="content-card">
+            <div class="card-media">
+                <div class="video-thumbnail" onclick="openVideo('mfWrF5MGFck')">
+                    <img src="https://img.youtube.com/vi/mfWrF5MGFck/maxresdefault.jpg" alt="slow down 视频封面">
+                    <div class="play-button"></div>
+                </div>
+            </div>
+            <div class="card-text">
+                <h3>slow down</h3>
+                <p>The music is meant to tell: In this noisy and hurried world, may you slow down and appreciate the true nature of life.</p>
+            </div>
+        </div>
+
+        <!-- ========== 卡片 8：Not the Answer（YouTube视频） ========== -->
+        <div class="content-card">
+            <div class="card-media">
+                <div class="video-thumbnail" onclick="openVideo('ZJDfxxNaS3U')">
+                    <img src="https://img.youtube.com/vi/ZJDfxxNaS3U/maxresdefault.jpg" alt="Not the Answer 视频封面">
+                    <div class="play-button"></div>
+                </div>
+            </div>
+            <div class="card-text">
+                <h3>Not the Answer</h3>
+                <p>This music comes from the article "Brand Thinking": I'm not here to give you answers, I'm here to open doors. Branding doesn't solve problems, it raises bigger questions.</p>
+            </div>
+        </div>
+
+         <!-- ========== 卡片 9：马年 ========== -->
+         <div class="content-card">
+            <div class="card-media">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/horse1.PNG" alt="马年水彩马" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/horse2.PNG" alt="马年糖果马" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/horse3.PNG" alt="马年糖果马2" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/horse4.PNG" alt="马年霓虹马" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/horse5.PNG" alt="马年炫彩马" onclick="openLightbox(this.src)">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigcWorks/horse6.PNG" alt="马年复古马" onclick="openLightbox(this.src)">
+            </div>
+            <div class="card-text">
+                <h3>Chinese New Year</h3>
+                <p>马年红包封面 </p>
+            </div>
+        </div>
+
+        <!-- ==================== 在这里添加新卡片 ==================== -->
+
+        <!-- ========== 卡片 4：新图片项目（复制此模板） ========== -->
+        <!--
+        <div class="content-card">
+            <div class="card-media">
+                <img src="图片URL" alt="描述" onclick="openLightbox(this.src)">
+                <img src="图片URL" alt="描述" onclick="openLightbox(this.src)">
+                ← 需要更多图片就复制这行
+            </div>
+            <div class="card-text">
+                <h3>项目标题</h3>
+                <p>项目描述</p>
+            </div>
+        </div>
+        -->
+
+        <!-- ========== 卡片 5：新视频项目（复制此模板） ========== -->
+        <!--
+        <div class="content-card">
+            <div class="card-media">
+                <div class="video-thumbnail" onclick="openVideo('视频ID')">
+                    <img src="https://img.youtube.com/vi/视频ID/maxresdefault.jpg" alt="视频封面">
+                    <div class="play-button"></div>
+                </div>
+            </div>
+            <div class="card-text">
+                <h3>视频标题</h3>
+                <p>视频描述</p>
+            </div>
+        </div>
+        -->
+
+        <!-- ==================== 新卡片添加结束 ==================== -->
+
+    </div>
+
+    <!-- 图片 Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="放大图片" id="lightbox-img" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- 视频播放器 -->
+    <div class="video-player" id="videoPlayer">
+        <span class="video-close" onclick="closeVideo()">&times;</span>
+        <iframe id="youtubeIframe" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        // 打开图片 Lightbox
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭 Lightbox
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 打开视频（传入视频ID）
+        function openVideo(videoId) {
+            document.getElementById('youtubeIframe').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+            document.getElementById('videoPlayer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭视频
+        function closeVideo() {
+            document.getElementById('videoPlayer').classList.remove('active');
+            document.getElementById('youtubeIframe').src = '';
+            document.body.style.overflow = 'auto';
+        }
+
+        // ESC 键关闭
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeVideo();
+            }
+        });
+    </script>
 </body>
 </html>
