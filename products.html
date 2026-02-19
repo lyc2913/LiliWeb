@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product 主题页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigc_PG.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: "Times New Roman", serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .page-title {
+            text-align: right;
+            font-size: 48px;
+            font-weight: normal;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-btn::after {
+            content: "<";
+            color: #000;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* 瀑布流容器 */
+        .gallery {
+            column-count: 4;
+            column-gap: 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 图片项 */
+        .gallery-item {
+            position: relative;
+            break-inside: avoid;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 悬停遮罩 */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+
+        .overlay h3 {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+
+        .overlay p {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            cursor: default;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 40px;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1200px) {
+            .gallery { column-count: 3; }
+        }
+        @media (max-width: 800px) {
+            .gallery { column-count: 2; }
+        }
+        @media (max-width: 500px) {
+            .gallery { column-count: 1; }
+        }
+    </style>
+</head>
+<body>
+    <a href="projects.html" class="back-btn" title="返回项目页面"></a>
+    <h1 class="page-title">Product</h1>
+
+    <div class="gallery">
+        <!-- 图片1 -->
+        <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src)">
+            <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/productWorks/mr.png'" alt="产品图片1MR">
+            <div class="overlay" onclick="event.stopPropagation()">
+                <h3>MR head-mounted display device</h3>
+                <p>For elderly people or patients who have difficulty cooking for themselves, this product can be used in conjunction with a kitchen robot, allowing for remote control of the robot to cook. For elderly people who are self-sufficient or those with basic medical conditions, this product can automate nutritional analysis and provide intelligent recipe recommendations.</p>
+            </div>
+        </div>
+
+        <!-- 图片2 -->
+        <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src)">
+            <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/productWorks/robot.png" alt="产品图片2机器人">
+            <div class="overlay" onclick="event.stopPropagation()">
+                <h3>Intelligent Kitchen Bionic Octopus Robot</h3>
+                <p>This is a home cooking robot that can provide some care for the elderly. Furthermore, with the increasing number of dual-income families in modern society, home cooking robots can handle cooking and cleaning tasks, helping to lighten the burden on families. For children, a home cooking robot can effectively solve the problem of having no food to eat when they are home alone.</p>
+            </div>
+        </div>
+
+        <!-- 图片3 -->
+        <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src)">
+            <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/productWorks/network-01.png" alt="产品图片3紫色路由器">
+            <div class="overlay" onclick="event.stopPropagation()">
+                <h3>Home Networking Equipment</h3>
+                <p>Phantom Purple Hexagonal Smart Router</p>
+            </div>
+        </div>
+
+        <!-- 图片4 -->
+        <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src)">
+            <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/productWorks/network-02.png" alt="产品图片4白色路由器">
+            <div class="overlay" onclick="event.stopPropagation()">
+                <h3>Home Networking Equipment</h3>
+                <p>Phantom Butterfly Smart Router</p>
+            </div>
+        </div>
+
+        <!-- 图片5 -->
+        <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src)">
+            <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/productWorks/massager.png" alt="产品图片5按摩仪">
+            <div class="overlay" onclick="event.stopPropagation()">
+                <h3>“点墨” mini handheld massager</h3>
+                <p>The curved structure mimics the head of a squid, enhancing user comfort. The design also mimics squid tentacles, providing a comfortable grip and serving as a support base. The product comes with a magnetic charging dock that simulates water ripples, mimicking the movement of a squid swimming in water.</p>
+            </div>
+        </div>
+
+        <!-- 图片6 -->
+        <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src)">
+            <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/productWorks/suitcase.png" alt="产品图片6行李箱">
+            <div class="overlay" onclick="event.stopPropagation()">
+                <h3>Smart Travel Suitcase</h3>
+                <p>The suitcase features a folding seat on the back. When folded, it can be pulled by foot, and when unfolded, it can be used to work while seated or ridden by electric means.</p>
+            </div>
+        </div>
+
+        <!-- 图片7 -->
+        <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src)">
+            <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/productWorks/controller.png" alt="产品图片7遥控器">
+            <div class="overlay" onclick="event.stopPropagation()">
+                <h3>Operating Table Remote Control</h3>
+                <p>Streamlined side profile and button area design with clear icons.</p>
+            </div>
+        </div>
+
+        <!-- 图片8
+        <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src)">
+            <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/productWorks/img8.jpg" alt="产品图片8">
+            <div class="overlay" onclick="event.stopPropagation()">
+                <h3>现场演出</h3>
+                <p>大型音乐会现场</p>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="放大图片" id="lightbox-img" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
