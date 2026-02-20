@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code 主题页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigc_PG.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: "Times New Roman", serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .page-title {
+            text-align: right;
+            font-size: 48px;
+            font-weight: normal;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-btn::after {
+            content: "<";
+            color: #000;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 100px;
+            margin-top: 100px;
+        }
+
+        .content-card {
+            width: 380px;
+            background-color: rgba(240, 240, 240, 0.5);  /* 更浅，50%不透明 */
+        }
+
+        .card-header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 120px;
+            background-color: rgba(240, 240, 240, 0.5);  /* 更浅，50%不透明 */
+        }
+
+        .card-header img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+        }
+
+        .card-header h3 {
+            flex: 1;
+            text-align: center;
+            font-size: 24px;
+            color: #000;
+            font-weight: normal;
+        }
+
+        .card-desc {
+            padding: 30px;
+            color: #000;
+            font-size: 14px;
+            line-height: 1.6;
+            background-color: rgba(240, 240, 240, 0.5);  /* 更浅，50%不透明 */
+            margin-top: 10px;
+            min-height: 200px;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            cursor: default;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 40px;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <a href="projects.html" class="back-btn" title="返回项目页面"></a>
+    <h1 class="page-title">Code</h1>
+
+    <div class="content-container">
+        <div class="content-card">
+            <div class="card-header">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/codeWorks/p5js-01.png" alt="p5js" onclick="openLightbox(this.src)">
+                <h3>What code can do but human cannot?</h3>
+            </div>
+            <div class="card-desc">
+                <p>P5JS was used to create a wave effect from randomly colored blocks, using light and shadow to represent the wave effect. The light and shadow can be expressed using trigonometric functions representing the peaks and troughs of a wave.</p>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <div class="card-header">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/codeWorks/vibe coding.png" alt="vibe coding" onclick="openLightbox(this.src)">
+                <h3>Endless</h3>
+            </div>
+            <div class="card-desc">
+                <p>The first one is the endless strip of Mobius. P5JS provide me with basic graphics and the most essential twists of the Mobius strip, and I can draw the shape of the Mobius strip on the canvas using the mouse. 
+The second picture is the endless spiral tunnel. P5JS provide me with basic graphics and circular emission from the center to the outside, and I can draw the depth of field effect of the tunnel in the canvas through mouse drawing. 
+The third picture combines the drawing logic of the first Mobius strip with Coca Cola bottles, manually drawing a shape similar to the second spiral tunnel, showing the endless feeling of Coca Cola.
+</p>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <div class="card-header">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/codeWorks/CampusTrip.png" alt="校园运APP" onclick="openLightbox(this.src)">
+                <h3>Graduation Design: Campus carpooling APP</h3>
+            </div>
+            <div class="card-desc">
+                <p>Design and Development of Campus carpooling APP based on Spring Boot+Uniapp+MyBatis.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="放大图片" id="lightbox-img" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
