@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artistic Font Demo</title>
+    <!-- 引入Google花体字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playball&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 页面背景模拟图片风格 */
+        body {
+            background: url('https://raw.githubusercontent.com/lyc2913/LiliWeb/main/connect_PG.png ') no-repeat center center fixed;
+            background-size: cover;
+            padding: 20px;
+            min-height: 100vh;
+             min-height: 100vh;
+            margin: 0;
+            position: relative; /* 为箭头和文字绝对定位做准备 */
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 返回箭头样式（无框+金属质感，固定左上） */
+        .back-arrow {
+            position: absolute;
+            top: 30px; /* 距离顶部30px */
+            left: 30px; /* 距离左侧30px */
+            text-decoration: none; /* 去掉链接下划线 */
+            display: flex;
+            align-items: center;
+            gap: 8px; /* 箭头和文字间距 */
+            transition: transform 0.2s ease;
+            cursor: pointer;
+            z-index: 10; /* 确保箭头在最上层 */
+        }
+
+        /* 箭头图形（纯CSS绘制） */
+        .arrow-icon {
+            width: 20px;
+            height: 20px;
+            border-top: 3px solid transparent;
+            border-left: 3px solid transparent;
+            /* 箭头金属渐变 */
+            background: linear-gradient(45deg, #f0f0f0, #888, #f0f0f0);
+            -webkit-background-clip: border-box;
+            background-clip: border-box;
+            -webkit-text-fill-color: transparent;
+            transform: rotate(-45deg); /* 旋转成左箭头 */
+            /* 箭头阴影增强金属质感*/
+            box-shadow: 
+                1px 1px 2px #000,
+                0 0 1px #fff; 
+        }
+
+        /* Home文字（金属质感，无框） */
+        .arrow-text {
+            font-family: 'Playball', cursive;
+            font-size: 1.8rem;
+            color: #c0c0c0;
+            /* 文字金属渐变 */
+            background: linear-gradient(45deg, #f0f0f0, #888, #f0f0f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* 文字阴影 */
+            text-shadow: 
+                1px 1px 2px #000,
+                0 0 1px #fff;
+        }
+
+        /* 鼠标悬浮时箭头+文字轻微放大 */
+        .back-arrow:hover {
+            transform: scale(1.05);
+        }
+
+        /* 核心字体样式：金属质感+花体（定位到左侧靠下） */
+        .contact-text {
+            position: absolute;
+            left: 185px; /* 距离左侧50px，可调整 */
+            bottom: 155px; /* 距离底部100px，可调整 */
+            font-family: 'Playball', cursive; /* 花体字体 */
+            font-size: 6rem; /* 字体大小，可调整 */
+            color: #c3c2c2; /* 基础银色 */
+            /* 金属渐变 */
+            background: linear-gradient(45deg, #f0f0f0, #888, #f0f0f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* 立体阴影，增强质感 */
+            text-shadow: 
+                1px 1px 2px #bdbcbc,
+                0 0 1px #fff,
+                0 0 2px #fff,
+                2px 2px 5px rgba(0,0,0,0.8);
+            /* 轻微倾斜，匹配图片角度 */
+            transform: rotate(-3deg);
+            margin: 0; /* 清除默认边距 */
+        }
+
+    </style>
+</head>
+<body>
+    
+     <!-- 返回箭头+Home文字（固定左上） -->
+    <a href="index.html" class="back-arrow">
+        <div class="arrow-icon"></div>
+        <span class="arrow-text">Home</span>
+    </a>
+
+    <!-- Contact Me文字（左侧靠下） -->
+    <div class="contact-text">
+        Connect Me:<br>
+        2894058405@qq.com
+    </div>
+</body>
+</html>
