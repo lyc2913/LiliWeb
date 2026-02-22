@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://raw.githubusercontent.com/lyc2913/LiliWeb/main/About_PG.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+       .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            z-index: 100;
+            background: none;        /* 去掉背景 */
+            border: none;            /* 去掉边框 */
+            border-radius: 0;        /* 去掉圆角 */
+            box-shadow: none;        /* 去掉阴影 */
+            padding: 0;              /* 去掉内边距 */
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: none;        /* 去掉悬停阴影 */
+        }
+
+        .back-btn::before {
+            content: "←";
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 0 0 5px #fff;
+        }
+
+        .back-btn span {
+            color: #fff;
+            font-family: "Courier New", monospace;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 
+                0 0 5px #fff,
+                2px 2px 0px #ff1493,
+                -1px -1px 0px #00ffff;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                0 0 20px #ff69b4,
+                0 0 40px #ff1493,
+                inset 0 0 15px rgba(255,255,255,0.5);
+        }
+
+        /* A4 简历图片 */
+        .resume {
+            position: absolute;
+            top: 49%;
+            left: 49.5%;
+            transform: translate(-50%, -50%);
+            height: 65vh;
+            width: auto;
+            max-width: 90vw;
+            object-fit: contain;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .resume:hover {
+            transform: translate(-50%, -50%) scale(1.02);
+        }
+
+        /* 全屏查看 */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 95vw;
+            max-height: 95vh;
+            object-fit: contain;
+            cursor: default;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #ff69b4;
+            font-size: 50px;
+            cursor: pointer;
+            text-shadow: 0 0 10px #ff1493;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 返回按钮 -->
+        <a href="index.html" class="back-btn" title="返回首页">
+            <span>Home</span>
+        </a>
+
+        <!-- 简历图片 -->
+        <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/CV-web.png" alt="简历" class="resume" onclick="openLightbox(this.src)">
+    </div>
+
+    <!-- 全屏查看 -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="全屏简历" id="lightbox-img" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
