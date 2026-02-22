@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>content 主题页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('https://raw.githubusercontent.com/lyc2913/LiliWeb/main/aigc_PG.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: "Times New Roman", serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .page-title {
+            text-align: right;
+            font-size: 48px;
+            font-weight: normal;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-btn::after {
+            content: "<";
+            color: #000;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 100px;
+            margin-top: 100px;
+        }
+
+        .content-card {
+            width: 380px;
+            background-color: rgba(240, 240, 240, 0.5);  /* 更浅，50%不透明 */
+        }
+
+        .card-header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 120px;
+            background-color: rgba(240, 240, 240, 0.5);  /* 更浅，50%不透明 */
+        }
+
+        .card-header img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+        }
+
+        .card-header h3 {
+            flex: 1;
+            text-align: center;
+            font-size: 24px;
+            color: #000;
+            font-weight: normal;
+        }
+
+        .card-desc {
+            padding: 30px;
+            color: #000;
+            font-size: 14px;
+            line-height: 1.6;
+            background-color: rgba(240, 240, 240, 0.5);  /* 更浅，50%不透明 */
+            margin-top: 10px;
+            min-height: 200px;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            cursor: default;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 40px;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <a href="projects.html" class="back-btn" title="返回项目页面"></a>
+    <h1 class="page-title">Content</h1>
+
+    <div class="content-container">
+        <div class="content-card">
+            <div class="card-header">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/contentWorks/MRmusic.png" alt="Ligeti Zentrum Hamburg" onclick="openLightbox(this.src)">
+                <h3>Ligeti Zentrum Hamburg</h3>
+            </div>
+            <div class="card-desc">
+                <p>This interdisciplinary Ligeti Centre brings together several universities and research projects, including the Hamburg University of Music and Drama (HfMT), the Hamburg University of Technology (TUHH), the Hamburg University of Applied Sciences (HAW) and the University Medical Center Hamburg-Eppendorf (UKE), combining art and science, culture and technology, and music and medicine...Read More: 微信公众号LiLi陈逸黎</p>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <div class="card-header">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/contentWorks/kunsthalle.jpeg" alt="kunsthalle" onclick="openLightbox(this.src)">
+                <h3>Kunstmeile Hamburg</h3>
+            </div>
+            <div class="card-desc">
+                <p>Upon entering the Hamburger Kunsthalle, turn left upstairs; the exhibits are all religious altarpieces and other religious works. Continue walking, and turn right to find Romantic paintings from the Renaissance onwards. The nextReality Festival featured a lecture showcasing a VR interactive experience with one of the museum's paintings...Read More: 微信公众号LiLi陈逸黎</p>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <div class="card-header">
+                <img src="https://raw.githubusercontent.com/lyc2913/LiliWeb/main/contentWorks/nanjing.jpg" alt="nanjing" onclick="openLightbox(this.src)">
+                <h3>南京博物院</h3>
+            </div>
+            <div class="card-desc">
+                <p>螺钿漆器，指取材于各种贝壳的天然色彩与美丽光泽的最佳部位，分层剥离和磨制后，根据设计图案需要，镶嵌于漆器表面作为装饰......阅读更多: 微信公众号LiLi陈逸黎</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="放大图片" id="lightbox-img" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
